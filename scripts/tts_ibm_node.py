@@ -27,10 +27,10 @@ def input_callback(data):
   # verifica se o audio da fala já existe na pasta
   #if not (os.path.isfile("audio_cache_files/" + file_name + ".mp3")): # se nao existe chama o watson
   # Eva tts functions
-  audio_file_path = "src/beginner_tutorials/scripts/speak_audio_files_cache/"
+  audio_file_path = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/speak_audio_files_cache/"
   audio_file_name = data.data
   audio_file_type = ".mp3"
-  audio_file_path_name = "src/beginner_tutorials/scripts/speak_audio_files_cache/" + data.data
+  audio_file_path_name = audio_file_path + data.data
   with open(audio_file_path + audio_file_name + audio_file_type, 'wb') as audio_file:
     rospy.loginfo("Aqui")
     try:
@@ -59,7 +59,7 @@ def node_init():
   # watson config api key
   rospy.loginfo("Configurando o serviço do IBM Watson...")
 	
-  with open("src/beginner_tutorials/scripts/ibm_cred.txt", "r") as ibm_cred:
+  with open("/home/pi/catkin_ws/src/eva-robot-ros/scripts/ibm_cred.txt", "r") as ibm_cred:
     ibm_config = ibm_cred.read().splitlines()
   
   apikey = ibm_config[0]

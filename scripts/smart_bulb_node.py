@@ -34,8 +34,8 @@ def node_init():
 
   rospy.init_node('smart_bulb_node', anonymous=False)
 
-  rospy.Subscriber('smart_bulb/state', String, state_callback)
-  rospy.Subscriber('smart_bulb/color', String, color_callback)
+  rospy.Subscriber('smart_bulb_node/state', String, state_callback)
+  rospy.Subscriber('smart_bulb_node/color', String, color_callback)
 
   # spin() simply keeps python from exiting until this node is stopped
   rospy.spin()

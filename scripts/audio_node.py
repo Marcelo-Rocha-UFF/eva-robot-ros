@@ -12,7 +12,8 @@ def play_voice_callback(data):
   # tipo (audio ou fala)
   # nome do arquivo sem a extensão
   # parametro block (true ou false)
-  audio_file = "src/beginner_tutorials/scripts/speak_audio_files_cache/" + data.data + ".mp3"
+  audio_voice_path = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/speak_audio_files_cache/"
+  audio_file = audio_voice_path + data.data + ".mp3"
   rospy.loginfo(rospy.get_caller_id() + ' playing speak file: %s', audio_file)
   playsound(audio_file, block = True)
   
@@ -23,7 +24,8 @@ def play_sound_callback(data):
   # tipo (audio ou fala)
   # nome do arquivo sem a extensão
   # parametro block (true ou false)
-  audio_file = "src/beginner_tutorials/scripts/audio_files/" + data.data + ".wav"
+  audio_file_path = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/audio_files/"
+  audio_file = audio_file_path + data.data + ".wav"
   rospy.loginfo(rospy.get_caller_id() + ' playing audio file: %s', audio_file)
   playsound(audio_file, block = True)
  

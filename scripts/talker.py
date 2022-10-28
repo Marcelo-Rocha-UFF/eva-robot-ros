@@ -42,7 +42,7 @@ from std_msgs.msg import String
 state = "off"
 
 def talker():
-    pub = rospy.Publisher('smart_bulb/state', String, queue_size=10)
+    pub = rospy.Publisher('smart_bulb_node/state', String, queue_size=10)
     rospy.init_node('talker', anonymous=True)
     rate = rospy.Rate(.33) # 1/3hz
     while not rospy.is_shutdown():

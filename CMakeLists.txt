@@ -205,6 +205,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-catkin_install_python(PROGRAMS scripts/talker.py scripts/listener.py scripts/smart_bulb_node.py scripts/audio_node.py scripts/tts_ibm_node.py
+catkin_install_python(PROGRAMS scripts/talker.py scripts/listener.py scripts/smart_bulb_node.py scripts/audio_node.py scripts/tts_ibm_node.py scripts/script_test.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
