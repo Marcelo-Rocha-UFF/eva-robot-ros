@@ -1,9 +1,10 @@
 # python3.6
 
-import rospy
+import rospy, rospkg
 from std_msgs.msg import String
 
 import hashlib
+import os
 
 from ibm_watson.text_to_speech_v1 import Voice
 from ibm_watson import TextToSpeechV1
@@ -20,46 +21,50 @@ def input_callback(data):
   
   # Assume the default UTF-8 (Gera o hashing do arquivo de audio)
   # Also, uses the voice tone attribute in file hashing
-  
-  #hash_object = hashlib.md5(texto[ind_random].encode())
-  #file_name = "_audio_"  + root.find("settings")[0].attrib["tone"] + hash_object.hexdigest()
+  texto = data.data
+  timbre_da_voz = "pt-BR_IsabelaV3Voice" # depois precisa ser definido externamente
+  hash_object = hashlib.md5(texto.encode())
+  rospy.loginfo("hashing: " + hash_object.hexdigest())
+
+  # Eva tts-ibm function
+  audio_speech_path = os.path.join(rospkg.RosPack().get_path("eva-robot-ros"), "scripts/speech_audio_files_cache/")
+  speech_file_name = "_audio_"  + timbre_da_voz + hash_object.hexdigest()
+  audio_file_type = ".mp3"
 
   # verifica se o audio da fala já existe na pasta
-  #if not (os.path.isfile("audio_cache_files/" + file_name + ".mp3")): # se nao existe chama o watson
-  # Eva tts functions
-  audio_file_path = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/speak_audio_files_cache/"
-  audio_file_name = data.data
-  audio_file_type = ".mp3"
-  audio_file_path_name = audio_file_path + data.data
-  with open(audio_file_path + audio_file_name + audio_file_type, 'wb') as audio_file:
-    rospy.loginfo("Aqui")
-    try:
-      # talvez o timbre de voz possa ser um parametro global em paramserver
-      res = tts.synthesize(data.data, accept = "audio/mp3", voice = "pt-BR_IsabelaV3Voice").get_result()
-      audio_file.write(res.content)
-      rospy.loginfo("Arquivo de audio gerado na pasta src/beginner_tutorials/scripts/speak_audio_files_cache/")
-    except:
-      rospy.loginfo("Voice exception")
-      #exit(1)
-
-  rospy.loginfo("Publicando " + audio_file_name)
-  pub.publish(audio_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
+  if not (os.path.isfile(audio_speech_path + speech_file_name + audio_file_type)): # se nao existe chama o watson
+    rospy.loginfo("O texto não se encontra na cache e será enviado para a nuvem...")
+    with open(audio_speech_path + speech_file_name + audio_file_type, 'wb') as audio_file:
+      try:
+        # talvez o timbre de voz possa ser um parametro global em paramserver
+        res = tts.synthesize(data.data, accept = "audio/mp3", voice = timbre_da_voz).get_result()
+        audio_file.write(res.content)
+        pub.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
+        rospy.loginfo("Arquivo: " + speech_file_name + audio_file_type + " , criado em " + audio_speech_path)
+      except:
+        rospy.loginfo("Voice exception")
+        exit(1)
+  else:
+    rospy.loginfo("O texto já se encontra na cache e será falado imediatamente!")
+    rospy.loginfo("Falando o texto: " + texto)
+    pub.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
 
 
 def node_init():
 
   global pub
-  
-  pub = rospy.Publisher('audio_node/play_voice', String, queue_size=10)
-  
+
   rospy.init_node('tts_ibm_node', anonymous=False)
+  
+  pub = rospy.Publisher('audio_node/speak', String, queue_size=10)
 
   rospy.Subscriber('tts_ibm_node/input', String, input_callback)
   
   # watson config api key
   rospy.loginfo("Configurando o serviço do IBM Watson...")
 	
-  with open("/home/pi/catkin_ws/src/eva-robot-ros/scripts/ibm_cred.txt", "r") as ibm_cred:
+  ibm_credentials_path = os.path.join(rospkg.RosPack().get_path("eva-robot-ros"), "scripts/ibm_cred.txt")
+  with open(ibm_credentials_path, "r") as ibm_cred:
     ibm_config = ibm_cred.read().splitlines()
   
   apikey = ibm_config[0]
