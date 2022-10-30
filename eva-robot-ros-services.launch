@@ -1,0 +1,12 @@
+<launch>
+<!-- Não executar
+    <node pkg="eva-robot-ros" type="smart_bulb_node.py" name="XIAOMI"/>
+    <node pkg="eva-robot-ros" type="talker.py" name="LAMP_CTRL"/>
+-->
+
+<!-- Executar-->
+    <node pkg="eva-robot-ros" type="smart_bulb_node.py" name="smart_bulb_node"/>
+    <node pkg="eva-robot-ros" type="audio_node.py" name="audio_node"/>
+    <node pkg="eva-robot-ros" type="tts_ibm_node.py" name="tts_ibm_node"/>
+    <node pkg="eva-robot-ros" type="display_node.py" name="display_node"/>
+</launch>
