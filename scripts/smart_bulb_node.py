@@ -18,12 +18,12 @@ def state_callback(data): # controla o estado da lampada
 def color_name_callback(data): # controla a cor da lampada (pelo nome da cor)
   color_map = {"WHITE":"16777215", "BLACK":"0", "RED":"16711680", "PINK":"15073406", "GREEN":"65280", "YELLOW":"16776960", "BLUE":"255"}
   color_number = color_map.get(data.data.upper()) # data.data é convertido para maiuscula para evitar incompatibilidade
-  st_json = '{"id":1,"method":"set_rgb","params":[' + color_number + ', "smooth", 100]}\r\n'
+  st_json = '{"id":1,"method":"set_rgb","params":[' + color_number + ', "smooth", 10]}\r\n'
   s.sendall(st_json.encode())
 
 def color_rgb_callback(data): # controla a cor da lampada (pelo valor em RGB, pode ter # ou não)
   color_number = int(data.data.replace('#', ''), base=16)
-  st_json = '{"id":1,"method":"set_rgb","params":[' + str(color_number) + ', "smooth", 100]}\r\n'
+  st_json = '{"id":1,"method":"set_rgb","params":[' + str(color_number) + ', "smooth", 10]}\r\n'
   s.sendall(st_json.encode())
 
 def node_init():

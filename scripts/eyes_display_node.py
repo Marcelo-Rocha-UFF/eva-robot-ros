@@ -43,8 +43,8 @@ def eyes_node_callback(data):
 
 
 def node_init():
-  rospy.init_node('eyes_node', anonymous=False)
-  rospy.Subscriber('eyes_node/emotion', String, eyes_node_callback)
+  rospy.init_node('eyes_display_node', anonymous=False)
+  rospy.Subscriber('eyes_display_node/emotion', String, eyes_node_callback)
 
 
 
