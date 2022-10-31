@@ -11,7 +11,7 @@ from ibm_watson import TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 tts = "" # objeto do servico do Watson
-pub = ""
+pub_audio_node_speak = ""
 
 def input_callback(data):
   # criar um tipo de mensagem que contenha:
@@ -28,7 +28,7 @@ def input_callback(data):
 
   # Eva tts-ibm function
   audio_speech_path = os.path.join(rospkg.RosPack().get_path("eva-robot-ros"), "scripts/speech_audio_files_cache/")
-  speech_file_name = "_audio_"  + timbre_da_voz + hash_object.hexdigest()
+  speech_file_name = "IBM-"  + timbre_da_voz + "-" + hash_object.hexdigest()
   audio_file_type = ".mp3"
 
   # verifica se o audio da fala já existe na pasta
@@ -39,7 +39,7 @@ def input_callback(data):
         # talvez o timbre de voz possa ser um parametro global em paramserver
         res = tts.synthesize(data.data, accept = "audio/mp3", voice = timbre_da_voz).get_result()
         audio_file.write(res.content)
-        pub.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
+        pub_audio_node_speak.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
         rospy.loginfo("Arquivo: " + speech_file_name + audio_file_type + " , criado em " + audio_speech_path)
       except:
         rospy.loginfo("Voice exception")
@@ -47,16 +47,16 @@ def input_callback(data):
   else:
     rospy.loginfo("O texto já se encontra na cache e será falado imediatamente!")
     rospy.loginfo("Falando o texto: " + texto)
-    pub.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
+    pub_audio_node_speak.publish(speech_file_name) # o path e o tipo do arquivo são inseridos no node audio_node
 
 
 def node_init():
 
-  global pub
+  global pub_audio_node_speak
 
   rospy.init_node('tts_ibm_node', anonymous=False)
   
-  pub = rospy.Publisher('audio_node/speak', String, queue_size=10)
+  pub_audio_node_speak = rospy.Publisher('audio_node/speak', String, queue_size=10)
 
   rospy.Subscriber('tts_ibm_node/input', String, input_callback)
   

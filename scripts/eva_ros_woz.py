@@ -10,6 +10,8 @@ from  tkinter import ttk # usando tabelas
 
 
 def gui_init():
+    global tts_service_var # armazena o nome do serviço de tts selecionado
+
     def on_closing():
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             window.destroy()
@@ -18,7 +20,7 @@ def gui_init():
     window = Tk()
     window.title("EVA [ROS Version] - WoZ Controller - UFF/MidiaCom")
     w = 600
-    h = 345 # on linux use
+    h = 375 # on linux use
     window.geometry(str(w) + "x" + str(h))
 
     # fonte tamanho 9 para botoes e textos em geral
@@ -49,7 +51,11 @@ def gui_init():
 
     def tts_speak_ctrl(text_to_speak):
         print(text_to_speak.get())
-        pub_tts_ibm_node_input.publish(text_to_speak.get())
+        print(tts_service_var.get())
+        if tts_service_var.get() == "ibm-watson":
+            pub_tts_ibm_node_input.publish(text_to_speak.get())
+        elif tts_service_var.get() == "google":
+            pub_tts_google_node_input.publish(text_to_speak.get())
 
 
     def play_sound(file_name):
@@ -98,17 +104,25 @@ def gui_init():
     bt_sb_blue= Button (lf_smartbulb, text = "Blue", font = font1, command=lambda: smartbulb_ctrl("blue"))
     bt_sb_blue.pack(side=tkinter.LEFT, padx=bt_padx, pady=bt_pady)
 
-    lf_tts = ttk.Labelframe(window, text="IBM-Watson Text To Speech (TTS) service")
+    lf_tts = ttk.Labelframe(window, text="Text To Speech (TTS) services")
     lf_tts.grid(sticky="w", row=3, column=0, padx=10, pady=5)
+
+    tts_service_var = StringVar()
+    tts_service_var.set("ibm-watson")
+    rd_button1 = Radiobutton(lf_tts, text="IBM-Watson", variable=tts_service_var, value="ibm-watson")
+    rd_button1.grid(sticky="w", row=0, column=0, padx=bt_padx, pady=bt_pady)
+    rd_button2 = Radiobutton(lf_tts, text="Google", variable=tts_service_var, value="google")
+    rd_button2.grid(sticky="w", row=0, column=1, padx=bt_padx, pady=bt_pady)
+
     tts_text_var = StringVar()
     bt_tts_send= Button (lf_tts, text = "Speak text", font = font1, command=lambda: tts_speak_ctrl(tts_text_var))
-    bt_tts_send.grid(row=0, column=0, padx=bt_padx, pady=bt_pady)
+    bt_tts_send.grid(row=1, column=0, padx=bt_padx, pady=bt_pady)
     text_to_speech=Entry(lf_tts, width=43, textvariable=tts_text_var)
-    text_to_speech.grid(row=0, column=1, padx=bt_padx, pady=bt_pady)
+    text_to_speech.grid(row=1, column=1, padx=bt_padx, pady=bt_pady)
     canvas = Canvas (window, width=456, height=243 )
     img_woz = PhotoImage(file = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/woz_image2.png")
     canvas.create_image(80,95, image=img_woz)
-    canvas.place(x=430, y=200)
+    canvas.place(x=435, y=220)
 
     lf_audio_play = ttk.Labelframe(window, text="EVA - Audio player")
     lf_audio_play.grid(row=0, column=1, rowspan=3, pady=5, padx=5)
@@ -152,6 +166,10 @@ def node_init():
   global pub_tts_ibm_node_input
   # tts-IBM
   pub_tts_ibm_node_input = rospy.Publisher('tts_ibm_node/input', String, queue_size=10)
+
+  global pub_tts_google_node_input
+  # tts-Google
+  pub_tts_google_node_input = rospy.Publisher('tts_google_node/input', String, queue_size=10)
 
   global pub_audio_node_speak, pub_audio_node_play
   # audio control

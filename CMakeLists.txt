@@ -211,6 +211,7 @@ catkin_install_python(PROGRAMS
     scripts/smart_bulb_node.py
     scripts/audio_node.py
     scripts/tts_ibm_node.py
+    scripts/tts_google_node.py
     scripts/display_node.py
     scripts/script_test.py
     scripts/eva_ros_woz.py
