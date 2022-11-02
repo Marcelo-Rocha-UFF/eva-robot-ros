@@ -1,4 +1,4 @@
-import rospy
+import rospy, rospkg
 from std_msgs.msg import String
 import threading
 
@@ -7,7 +7,7 @@ from tkinter import *
 from tkinter import messagebox
 import tkinter
 from  tkinter import ttk # usando tabelas
-
+import os
 
 def gui_init():
     global tts_service_var # armazena o nome do serviço de tts selecionado
@@ -120,7 +120,7 @@ def gui_init():
     text_to_speech=Entry(lf_tts, width=43, textvariable=tts_text_var)
     text_to_speech.grid(row=1, column=1, padx=bt_padx, pady=bt_pady)
     canvas = Canvas (window, width=456, height=243 )
-    img_woz = PhotoImage(file = "/home/pi/catkin_ws/src/eva-robot-ros/scripts/woz_image2.png")
+    img_woz = PhotoImage(file = os.path.join(rospkg.RosPack().get_path("eva-robot-ros"), "scripts/woz_image2.png"))
     canvas.create_image(80,95, image=img_woz)
     canvas.place(x=435, y=220)
 
