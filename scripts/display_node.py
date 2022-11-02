@@ -3,10 +3,16 @@ from std_msgs.msg import String
 
 import time
 from tkinter import *
+from tkinter import messagebox
+
 import threading
 import os
 
 
+# closing application
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        window.destroy()
 
 def gui_init():
   global window, canvas, display_img
@@ -17,6 +23,12 @@ def gui_init():
   display_img = PhotoImage(file = os.path.join(rospkg.RosPack().get_path("eva-robot-ros"), "scripts/eyes_images/eyes_neutral.png"))
   canvas.create_image(228, 128, image=display_img)
   canvas.pack()
+  # define the closing app function
+  window.protocol("WM_DELETE_WINDOW", on_closing)
+
+# does not show the min button
+  window.resizable(0,0)
+  
   window.mainloop()
    
 

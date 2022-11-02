@@ -9,5 +9,4 @@
     <node pkg="eva-robot-ros" type="audio_node.py" name="audio_node"/>
     <node pkg="eva-robot-ros" type="tts_ibm_node.py" name="tts_ibm_node"/>
     <node pkg="eva-robot-ros" type="tts_google_node.py" name="tts_google_node"/>
-    <node pkg="eva-robot-ros" type="display_node.py" name="display_node"/>
 </launch>

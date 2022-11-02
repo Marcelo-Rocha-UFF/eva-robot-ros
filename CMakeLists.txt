@@ -213,8 +213,7 @@ catkin_install_python(PROGRAMS
     scripts/tts_ibm_node.py
     scripts/tts_google_node.py
     scripts/display_node.py
-    scripts/script_test.py
-    scripts/eva_ros_woz.py
+    scripts/eva_ros_woz_node.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
